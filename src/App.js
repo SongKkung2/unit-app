@@ -1,48 +1,43 @@
 import './App.css';
+import './Rwd.css';
 import {useState} from 'react';
-
 function App() {
-  const [centimeter, setCentimeter] = useState("0")
-  const [status, setStatus] = useState(false)
-  const [inch, setInch] = useState("0")
-  const reset = () =>{
-    setCentimeter('값을 입력하세요.')
-    setInch('inch로 환산됩니다.')
+  const [centimeter, setCentimeter] = useState("0");
+  const [status, setStatus] = useState(false);
+  // centimeter 변수,  setCentimeter 수정변수(=cemtimeter) 변수의 값을 업데이트 & app 컴포턴트를
+  const handleCentimeter = (e) => {
+    setCentimeter(e.target.value); // cm 입력폼의 수정된 값으로 centimeter 변수 업데이트
   }
-  const handleChange = (e) => {
-    setCentimeter(e.target.value);
-  }
-  const handleChangeInch = (e) => {
-    setInch(e.target.value);
-  }
-  
   const handleSubmit = (e) =>{
-    e.preventDefault();//이벤트 전파를 막는 메소드 새로고침을 못하게 막아줌
-    setInch(centimeter / 2.54)
+    e.preventDefault(); // 이벤트 전파를 막는 메소드 (폼 이벤트 submit 새로고침을 금지)
   }
-  const swichInput = () =>{
+  const resetInput = () =>{
+    setCentimeter("");
+  }
+  const switchInput = () => {
     setStatus(!status)
   }
-
   return (
     <div className="App">
-      <h1 className='title'>단위 환산</h1>
-      <p className='sub-title'>cm을 inch로 환산하기!</p>
-      {/* 1인치 = 2.54센치 */}
-      <form onSubmit={handleSubmit}>
-        <div className="input-wrap">
-          <label><input type="number" value={centimeter} onChange={handleChange} disabled={!status} placeholder='cm값을 입력하세요' />Cm</label>
-          <label><input type="number" value={inch} placeholder='inch로 환산됩니다.' onChange={handleChangeInch} disabled={status}/>Inch</label>
-        </div>
-        <div className="btn-wrap">
-          <input className='ok' type="submit" value="환산하기"/>
-          <input className='reset' onClick={reset} type="submit" value="초기화 하기"/>
-          <input onClick={swichInput} type="submit" value="계산 반대로 하기"/>
-        </div>
-      </form>
-      <p className='footer'>&copy; 채은이 만듦</p>
+      <h1 className="title-text text-center text-white my-0 py-1">단위 환산</h1>
+      {/* cm를 2.54로 나누면 inch, inch를 2.54 곱하면 cm */}
+      <p className="info py-1 my-0">cm를 inch로 환산하는 앱</p>
+      <div className="form-wrap my-1">
+        <form onSubmit={handleSubmit}>
+          <div className="input-wrap">
+            <label> {/* 조건식 ?  참일때 : 거짓일때; */}
+              <input type="number" id='cm' value={status ? centimeter * 2.54 : centimeter} onChange={handleCentimeter} placeholder="센티미터(cm)를 입력하세요" disabled={status} />cm
+            </label>
+            <label>
+              <input type="number" id='inch' value={!status ? centimeter / 2.54 : centimeter} onChange={handleCentimeter} placeholder="인치(inch)로 환산됩니다." disabled={!status}/>inch
+            </label>
+            <input type="reset" onClick={resetInput} value="초기화" />
+            <input type="submit" onClick={switchInput} value="입력반전" />
+          </div>
+        </form>
+      </div>
+      <p className="owner text-center text-white py-1 fixed w100 bottom0">&copy; jinyang.</p>
     </div>
   );
 }
-
 export default App;
